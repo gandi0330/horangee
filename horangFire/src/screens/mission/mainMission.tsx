@@ -107,8 +107,15 @@ const MainMission = ({navigation}: Props) => {
               <Text>{clickHelp ? 'X' : '?'}</Text>
             </TouchableOpacity>
           </View>
+
           {/* 안에 들어갈 텍스트 내용 */}
-          {!clickHelp && <MissionTxt mission={mission} setDiary={setDiary} />}
+          {!clickHelp && (
+            <MissionTxt
+              mission={mission}
+              setDiary={setDiary}
+              navigation={navigation}
+            />
+          )}
           {clickHelp && <HelpTxt mission={mission} info={info} />}
         </View>
 

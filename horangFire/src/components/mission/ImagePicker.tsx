@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
-// import { View } from 'react-native';
+import {ParamListBase} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 import {Image, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {color, font} from '../../styles/colorAndFontTheme';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import imagesPath from '../../assets/image/constants/imagesPath';
 
 const styles = StyleSheet.create({
@@ -30,11 +30,12 @@ const styles = StyleSheet.create({
   },
 });
 
-function ImagePicker() {
+interface Props {
+  navigation: StackNavigationProp<ParamListBase, 'MainMission'>;
+}
+
+const ImagePicker = ({navigation}: Props) => {
   const [fileImage, setFileImage] = useState('');
-  const clickEvent = () => {
-    console.log('zz');
-  };
 
   //   async function takeImageHandler() {
   //     const result = await launchCamera({
@@ -47,20 +48,8 @@ function ImagePicker() {
   //   }
 
   function showPicker() {
-    //  사용자 앨범 접근
-    launchImageLibrary({}, res => {
-      //   const formdata = new FormData();
-      //   formdata.append('file', res.assets[0].uri);
-      //   console.log(res.assets[0]);
-
-      // 취소 버튼을 누르면
-      if (!res.didCancel) {
-        // 사진을 누르면
-        setFileImage(res.assets[0].uri);
-      } else {
-        console.log('취소!'); // 취소 누를시
-      }
-    });
+    // 모달 창 보여주기
+    navigation.navigate('CameraModal');
   }
 
   return (
@@ -83,5 +72,5 @@ function ImagePicker() {
       )} */}
     </TouchableOpacity>
   );
-}
+};
 export default ImagePicker;
