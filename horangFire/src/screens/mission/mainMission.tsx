@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {color, font} from '../../styles/colorAndFontTheme';
 import TitleText from '../../components/common/TitleText';
 import {reset} from '../../store/mission';
@@ -16,7 +16,10 @@ import MissionTxt from '../../components/mission/MissionTxt';
 import HelpTxt from '../../components/mission/HelpTxt';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {ParamListBase} from '@react-navigation/native';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {selectName} from '../../store/character';
+import api from '../../api/api_controller';
+import {selectMainFile} from '../../store/mission';
 
 const styles = StyleSheet.create({
   container: {
@@ -69,6 +72,8 @@ interface Props {
 
 const MainMission = ({navigation}: Props) => {
   const dispatch = useDispatch();
+  const name = useSelector(selectName);
+  const imgUrl = useSelector(selectMainFile);
 
   const [clickHelp, setClickHelp] = useState(false);
   const mission = '종이 아끼기';
@@ -76,11 +81,22 @@ const MainMission = ({navigation}: Props) => {
   const info =
     '1. 예시 사진과 동일하게 종이를 아끼는 모습을 담은 사진을 찍어주세요. \n 2. 부적합한 사진 업로드시 포인트가 차감될 수 있습니다.';
 
-  const submit = () => {
+  const submit = async () => {
     if (diary !== '') {
       // 제출 api 호출
       dispatch(reset());
-      navigation.navigate('SubmitMission');
+      try {
+        await api.diary.submitMain({
+          content: diary,
+          imgUrl: imgUrl,
+          userId: 'test1', // user id
+          userCharacter: 1, // 캐릭터 id
+          charactersId: 1, // 동물 타입
+        });
+        navigation.navigate('SubmitMission');
+      } catch (err) {
+        Alert.alert('작성 실패ㅜㅠ');
+      }
     } else {
       Alert.alert('성냥팔이 호랭이', '글을 작성해주세요!', [{text: '닫기'}]);
     }
@@ -91,15 +107,13 @@ const MainMission = ({navigation}: Props) => {
     navigation.goBack();
   };
 
-  useEffect(() => {
-    console.log('change');
-  }, [diary]);
+  // useEffect(() => {}, [diary]);
 
   return (
     <SafeAreaView style={{backgroundColor: color.BACK_SUB}}>
       <View style={styles.container}>
         <View style={styles.cont1}>
-          <TitleText title="호랭이 이름" subTitle="메인 미션 수행하기" />
+          <TitleText title={name} subTitle="메인 미션 수행하기" />
         </View>
 
         <View style={styles.cont2}>

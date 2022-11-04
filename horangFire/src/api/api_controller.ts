@@ -11,8 +11,21 @@ const api = {
           token: formData.data,
         },
       });
-
       return response;
+    },
+  },
+  diary: {
+    submitMain: async (diary: any) => {
+      console.log(diary);
+      const res = await axios({
+        url: urls.diary.submit(),
+        method: 'post',
+        data: {
+          ...diary,
+        },
+      });
+      console.log(res);
+      return res;
     },
   },
 };

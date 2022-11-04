@@ -5,6 +5,7 @@ export interface missionType {
   mainTxt: string;
   commonFile: string;
   commonTxt: string;
+  //   isDone: boolean;
 }
 
 export const missionInitialState: missionType | null = {
