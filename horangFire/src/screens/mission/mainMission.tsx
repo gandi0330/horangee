@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {color, font} from '../../styles/colorAndFontTheme';
 import TitleText from '../../components/common/TitleText';
+import {reset} from '../../store/mission';
 import {
   Image,
   SafeAreaView,
@@ -15,6 +16,7 @@ import MissionTxt from '../../components/mission/MissionTxt';
 import HelpTxt from '../../components/mission/HelpTxt';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {ParamListBase} from '@react-navigation/native';
+import {useDispatch} from 'react-redux';
 
 const styles = StyleSheet.create({
   container: {
@@ -66,6 +68,8 @@ interface Props {
 }
 
 const MainMission = ({navigation}: Props) => {
+  const dispatch = useDispatch();
+
   const [clickHelp, setClickHelp] = useState(false);
   const mission = '종이 아끼기';
   const [diary, setDiary] = useState('');
@@ -75,12 +79,16 @@ const MainMission = ({navigation}: Props) => {
   const submit = () => {
     if (diary !== '') {
       // 제출 api 호출
+      dispatch(reset());
       navigation.navigate('SubmitMission');
     } else {
-      Alert.alert('성냥팔이 호랭이', '작성된 내용이 없어요ㅠㅠ', [
-        {text: '돌아가기'},
-      ]);
+      Alert.alert('성냥팔이 호랭이', '글을 작성해주세요!', [{text: '닫기'}]);
     }
+  };
+
+  const goBack = () => {
+    dispatch(reset());
+    navigation.goBack();
   };
 
   useEffect(() => {
@@ -120,7 +128,7 @@ const MainMission = ({navigation}: Props) => {
         </View>
 
         <View style={styles.btns}>
-          <Btn txt="이전으로" clickEvent={() => navigation.goBack()} />
+          <Btn txt="이전으로" clickEvent={goBack} />
           <Btn txt="제출하기" clickEvent={submit} />
         </View>
       </View>
