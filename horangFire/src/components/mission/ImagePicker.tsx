@@ -1,9 +1,11 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {ParamListBase} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {Image, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {color, font} from '../../styles/colorAndFontTheme';
-import imagesPath from '../../assets/image/constants/imagesPath';
+// import imagesPath from '../../assets/image/constants/imagesPath';
+import {useSelector} from 'react-redux';
+import {selectMainFile} from '../../store/mission';
 
 const styles = StyleSheet.create({
   photo: {
@@ -37,6 +39,8 @@ interface Props {
 const ImagePicker = ({navigation}: Props) => {
   const [fileImage, setFileImage] = useState('');
 
+  // const fileUrl = useSelector(setFile{file});
+
   //   async function takeImageHandler() {
   //     const result = await launchCamera({
   //       mediaType: 'photo',
@@ -46,6 +50,15 @@ const ImagePicker = ({navigation}: Props) => {
   //     });
   //     console.log(result);
   //   }
+
+  // const img = useSelector(
+  //   (state: {mainMission: missionType}) => state.mainMission,
+  // );
+  const img = useSelector(selectMainFile);
+  useEffect(() => {
+    console.log(img);
+    setFileImage(img);
+  }, [img]);
 
   function showPicker() {
     // 모달 창 보여주기
@@ -63,13 +76,6 @@ const ImagePicker = ({navigation}: Props) => {
       {fileImage !== '' && (
         <Image style={styles.preview} source={{uri: fileImage}} />
       )}
-
-      {/* {!isMain && (
-        <Text style={styles.photoTxt}>
-          공통 미션에는 {'\n'} 사진 업로드가 필수야!{'\n'}
-          (? 버튼으로 자세한 사항을 확인해봐!)
-        </Text>
-      )} */}
     </TouchableOpacity>
   );
 };

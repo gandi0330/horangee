@@ -2,6 +2,8 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import StackNavigation from './navigations/Stack';
+import store from './store/index';
+import {Provider} from 'react-redux';
 
 const styles = StyleSheet.create({
   outer: {
@@ -15,12 +17,14 @@ const styles = StyleSheet.create({
 
 export default function App() {
   return (
-    <View style={styles.outer}>
-      <NavigationContainer>
-        <View style={styles.main}>
-          <StackNavigation />
-        </View>
-      </NavigationContainer>
-    </View>
+    <Provider store={store}>
+      <View style={styles.outer}>
+        <NavigationContainer>
+          <View style={styles.main}>
+            <StackNavigation />
+          </View>
+        </NavigationContainer>
+      </View>
+    </Provider>
   );
 }

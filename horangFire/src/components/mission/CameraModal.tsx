@@ -2,7 +2,9 @@ import {StyleSheet, View, Image} from 'react-native';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import Btn from '../common/Btn_long';
 import {PermissionsAndroid} from 'react-native';
-import {useEffect, useState} from 'react';
+import {useEffect} from 'react';
+import {useDispatch} from 'react-redux';
+import {setFile} from '../../store/mission';
 
 const styles = StyleSheet.create({
   body: {
@@ -30,39 +32,45 @@ const styles = StyleSheet.create({
 });
 
 const CameraModal = ({navigation}: any) => {
-  const [fileImage, setFileImage] = useState('');
+  const dispatch = useDispatch();
 
+  // 권한 부여 =======
   const checkGranted = async () => {
-    const grantedcamera = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.CAMERA,
-      {
-        title: 'App Camera Permission',
-        message: 'App needs access to your camera',
-        buttonNegative: 'Cancel',
-        buttonPositive: 'OK',
-        buttonNeutral: 'Ask me Later',
-      },
-    );
-    const grantedstorage = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-      {
-        title: 'App Camera Permission',
-        message: 'App needs access to your camera',
-        buttonNegative: 'Cancel',
-        buttonPositive: 'OK',
-        buttonNeutral: 'Ask me Later',
-      },
-    );
+    try {
+      const grantedcamera = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: 'App Camera Permission',
+          message: 'App needs access to your camera',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+          buttonNeutral: 'Ask me Later',
+        },
+      );
+      const grantedstorage = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        {
+          title: 'App Camera Permission',
+          message: 'App needs access to your camera',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+          buttonNeutral: 'Ask me Later',
+        },
+      );
 
-    if (
-      grantedcamera === PermissionsAndroid.RESULTS.GRANTED &&
-      grantedstorage === PermissionsAndroid.RESULTS.GRANTED
-    ) {
-      console.log('ss');
-    } else {
-      console.log('permission denied');
+      if (
+        grantedcamera === PermissionsAndroid.RESULTS.GRANTED &&
+        grantedstorage === PermissionsAndroid.RESULTS.GRANTED
+      ) {
+        console.log('ss');
+      } else {
+        console.log('permission denied');
+      }
+    } catch (err) {
+      console.warn(err);
     }
   };
+
   useEffect(() => {
     checkGranted();
   }, []);
@@ -73,10 +81,12 @@ const CameraModal = ({navigation}: any) => {
       //   const formdata = new FormData();
       //   formdata.append('file', res.assets[0].uri);
       //   console.log(res.assets[0]);
-
-      // 취소 버튼을 누르면
+      // 취소 버튼을 누르지 않으면
       if (!res.didCancel && res) {
-        setFileImage(res.assets[0].uri); // 사진을 누르면
+        // setFileImage(res.assets[0].uri); // 사진을 누르면
+        dispatch(setFile({file: res.assets[0].uri}));
+        console.log('success!!!!');
+        navigation.navigate('MainMission');
       }
     });
   }
