@@ -72,7 +72,7 @@ const CameraModal = ({navigation}: any) => {
   };
 
   useEffect(() => {
-    checkGranted();
+    checkGranted(); // 권한 확인
   }, []);
 
   function showGallary() {
@@ -85,18 +85,25 @@ const CameraModal = ({navigation}: any) => {
       if (!res.didCancel && res) {
         // setFileImage(res.assets[0].uri); // 사진을 누르면
         dispatch(setFile({file: res.assets[0].uri}));
-        console.log('success!!!!');
         navigation.navigate('MainMission');
       }
     });
   }
 
   const takePicture = async () => {
-    const res = launchCamera({mediaType: 'photo', cameraType: 'back'});
-    console.log(res);
-    // launchCamera({mediaType: 'photo', cameraType: 'back'}, res => {
-    //   console.log(res);
-    // });
+    // const res = launchCamera({mediaType: 'photo', cameraType: 'back'});
+    // if (!(await res).didCancel && res) {
+    //   console.log('11');
+    //   dispatch(setFile({file: res.assets[0].uri}));
+    //   navigation.navigate('MainMission');
+    // }
+
+    launchCamera({mediaType: 'photo', cameraType: 'back'}, res => {
+      if (!res.didCancel && res) {
+        dispatch(setFile({file: res.assets[0].uri}));
+        navigation.navigate('MainMission');
+      }
+    });
   };
 
   return (
