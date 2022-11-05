@@ -3,6 +3,8 @@ import {StyleSheet, View} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import StackNavigation from './navigations/Stack';
 import SplashScreen from 'react-native-splash-screen';
+import store from './store/index';
+import {Provider} from 'react-redux';
 
 import Sound from 'react-native-sound';
 
@@ -39,13 +41,15 @@ export default function App() {
   }, []);
 
   return (
-    <View style={styles.outer}>
-      <NavigationContainer>
-        <View style={styles.main}>
-          <StackNavigation />
-        </View>
-      </NavigationContainer>
-    </View>
+    <Provider store={store}>
+      <View style={styles.outer}>
+        <NavigationContainer>
+          <View style={styles.main}>
+            <StackNavigation />
+          </View>
+        </NavigationContainer>
+      </View>
+    </Provider>
   );
 }
 

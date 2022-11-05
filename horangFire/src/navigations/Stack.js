@@ -18,6 +18,7 @@ import MainMission from '../screens/mission/mainMission';
 import CommonMission from '../screens/mission/commonMission';
 import LookCommon from '../screens/mission/lookCommon';
 import SubmitMission from '../screens/mission/submitMission';
+import CameraModal from '../components/mission/CameraModal';
 
 import Notice from '../screens/community/Notice';
 import NoticeDetail from '../screens/community/NoticeDetail';
@@ -32,6 +33,7 @@ import DiaryDetail from '../components/collection/DiaryDetail';
 import Points from '../components/points/Points';
 import MissionComplete from '../screens/selectAnimal/MissionComplete';
 
+// option Modal
 import SelectModal from '../components/options/SelectModal';
 import ApplyModal from '../components/options/ApplyModal';
 
@@ -43,7 +45,7 @@ const Stack = createStackNavigator();
 const StackNavigation = () => {
   return (
     <Stack.Navigator
-      initialRouteName="Login"
+      initialRouteName="Home"
       screenOptions={{
         headerShown: false,
       }}>
@@ -58,8 +60,8 @@ const StackNavigation = () => {
         <Stack.Screen name="AnimalNameConfirm" component={AnimalNameConfirm} />
         <Stack.Screen name="MissionIntro" component={MissionIntro} />
         <Stack.Screen name="MissionComplete" component={MissionComplete} />
-        {/* mission page */}
 
+        {/* mission page */}
         <Stack.Screen name="MissionHome" component={MissionHome} />
         <Stack.Screen name="MainMission" component={MainMission} />
         <Stack.Screen name="SubmitMission" component={SubmitMission} />
@@ -91,6 +93,7 @@ const StackNavigation = () => {
         <Stack.Screen name="ListOfDiaries" component={ListOfDiaries} />
         <Stack.Screen name="DiaryDetail" component={DiaryDetail} />
         <Stack.Screen name="Points" component={Points} />
+        <Stack.Screen name="CameraModal" component={CameraModal} />
       </Stack.Group>
     </Stack.Navigator>
   );
