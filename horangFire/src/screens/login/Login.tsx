@@ -1,6 +1,6 @@
 import {ParamListBase} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {
   Image,
   ImageBackground,
@@ -22,46 +22,43 @@ interface Props {
 }
 
 const Login = ({navigation}: Props) => {
-  const [result, setResult] = useState<string>('');
-  const [profile, setProfile] = useState<string>('');
-  const [val, setVal] = useState<string | null>(null);
-
   const signInWithKakao = async (): Promise<void> => {
     try {
-      const token = await login();
-      setResult(JSON.stringify(token));
-      getProfile();
+      await login();
+      await getProfileId();
     } catch (err) {
-      console.log('Login Error');
+      console.error(err);
     }
   };
 
-  const getProfile = async (): Promise<void> => {
+  const getProfileId = async (): Promise<void> => {
     try {
       const profileResult = await getKakaoProfile();
-      setProfile(profileResult.id);
+      await saveDataInLocalStorage('id', profileResult.id);
+      navigation.navigate('SelectAnimal');
     } catch (err) {
-      console.log('Profile error');
+      console.error(err);
+    }
+  };
+
+  const getUserData = async () => {
+    const isLoggedIn = await getDataInLocalStorage('id');
+
+    /**
+     * TODO
+     * 로그인 돼있는지 확인하고 로그인 돼있으면
+     * 키우는 동물 있으면 홈으로, 없으면 동물선택
+     * 로그인 안 돼있으면 로그인 페이지 유지
+     */
+
+    if (isLoggedIn) {
+      navigation.navigate('Home');
     }
   };
 
   useEffect(() => {
-    const saveAndGetData = async () => {
-      await saveDataInLocalStorage('id', profile);
-      const data = await getDataInLocalStorage('id');
-      setVal(data);
-    };
-
-    if (profile) {
-      saveAndGetData();
-    }
-  }, [profile]);
-
-  useEffect(() => {
-    if (val) {
-      console.log(val);
-    }
-  }, [val]);
+    getUserData();
+  }, []);
 
   return (
     <ImageBackground source={require('../../assets/image/intro.png')}>

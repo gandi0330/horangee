@@ -4,14 +4,27 @@ import {NavigationContainer} from '@react-navigation/native';
 import StackNavigation from './navigations/Stack';
 import SplashScreen from 'react-native-splash-screen';
 
-const styles = StyleSheet.create({
-  outer: {
-    flex: 1,
-  },
-  main: {
-    width: '100%',
-    height: '100%',
-  },
+import Sound from 'react-native-sound';
+
+Sound.setCategory('SoloAmbient');
+
+const sound = new Sound('example_sound.mp3', Sound.MAIN_BUNDLE, error => {
+  if (error) {
+    console.log('로드 실패', error);
+    return;
+  }
+  // if loaded successfully
+  console.log('재생 시간 : ' + sound.getDuration());
+
+  sound.play(success => {
+    if (success) {
+      console.log('재생 완료');
+    } else {
+      console.log('재생 실패');
+    }
+  });
+
+  sound.setNumberOfLoops(-1);
 });
 
 export default function App() {
@@ -35,3 +48,13 @@ export default function App() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  outer: {
+    flex: 1,
+  },
+  main: {
+    width: '100%',
+    height: '100%',
+  },
+});
