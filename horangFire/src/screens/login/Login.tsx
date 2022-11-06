@@ -20,6 +20,7 @@ import api from '../../api/api_controller';
 import {selectUser, User} from '../../store/user';
 import {useDispatch, useSelector} from 'react-redux';
 import {setUserObject} from '../../store/user';
+import {setMyCharacter} from '../../store/character';
 
 interface Props {
   navigation: StackNavigationProp<ParamListBase, 'Login'>;
@@ -55,7 +56,6 @@ const Login = ({navigation}: Props) => {
 
   const getUserData = async () => {
     /**
-     * TODO
      * 로그인 돼있는지 확인하고 로그인 돼있으면
      * 키우는 동물 있으면 홈으로, 없으면 동물선택
      * 로그인 안 돼있으면 로그인 페이지 유지
@@ -64,10 +64,9 @@ const Login = ({navigation}: Props) => {
     // const isLoggedIn = await getDataInLocalStorage('token');
 
     const profileId = await getDataInLocalStorage('id');
-
     if (profileId) {
       const response = await api.user.getUserInfo(profileId);
-      dispatch(setUserObject(response.data));
+      dispatch(setUserObject({user: response.data}));
     }
 
     // 프로필 id(토큰)이 없으면 그냥 로그인 페이지 유지
@@ -77,6 +76,7 @@ const Login = ({navigation}: Props) => {
     const response = await api.character.getNowUserCharacter(id);
 
     if (response.data.userCharacter) {
+      dispatch(setMyCharacter(response.data.userCharacter));
       navigation.navigate('Home');
     } else {
       navigation.navigate('SelectAnimal');

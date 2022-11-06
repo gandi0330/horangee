@@ -23,7 +23,7 @@ export const userSlice = createSlice({
   reducers: {
     //mutations
     setUserObject: (state, action) => {
-      state = action.payload.user;
+      return action.payload.user;
     },
     reset: state => {
       Object.assign(state, userInitialState);
