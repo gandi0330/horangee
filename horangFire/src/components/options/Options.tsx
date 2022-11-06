@@ -21,17 +21,26 @@ const Option = ({navigation}: Props) => {
   const [backgroundVolume, setBackgroundVolume] = useState<number>(1);
   const [effectVolume, setEffectVolume] = useState<number>(1);
 
+  const [initialBgmVolume, setInitialVolume] = useState<number>(1);
+  const [initialEfVolume, setInitialEfVolume] = useState<number>(1);
+
   const toggleSwitch = () => {
     setIsEnabled(prev => !prev);
   };
 
   const onClickCancelButton = () => {
+    setBackgroundVolume(initialBgmVolume);
+    setEffectVolume(initialEfVolume);
     navigation.navigate('Home');
   };
 
   const onClickApplyButton = () => {
-    setLocalVolume();
-    setLocalEfVolume();
+    setLocalVolume(backgroundVolume);
+    setLocalEfVolume(effectVolume);
+
+    setInitialVolume(backgroundVolume);
+    setInitialEfVolume(effectVolume);
+
     navigation.navigate('Home');
   };
 
@@ -47,19 +56,21 @@ const Option = ({navigation}: Props) => {
 
     if (bgmVolume) {
       setBackgroundVolume(bgmVolume);
+      setInitialVolume(bgmVolume);
     }
 
     if (efVolume) {
       setEffectVolume(efVolume);
+      setInitialEfVolume(efVolume);
     }
   };
 
-  const setLocalVolume = async () => {
-    await saveDataInLocalStorage('bgmVolume', backgroundVolume);
+  const setLocalVolume = async (volume: number) => {
+    await saveDataInLocalStorage('bgmVolume', volume);
   };
 
-  const setLocalEfVolume = async () => {
-    await saveDataInLocalStorage('efVolume', effectVolume);
+  const setLocalEfVolume = async (volume: number) => {
+    await saveDataInLocalStorage('efVolume', volume);
   };
 
   useEffect(() => {
@@ -69,8 +80,6 @@ const Option = ({navigation}: Props) => {
   useEffect(() => {
     sound.setVolume(backgroundVolume);
   }, [backgroundVolume]);
-
-  useEffect(() => {}, [effectVolume]);
 
   return (
     <View style={styles.body}>
