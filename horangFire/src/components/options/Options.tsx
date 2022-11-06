@@ -1,11 +1,16 @@
 import {View, StyleSheet, Image, Text, Switch} from 'react-native';
 import {color, font} from '../../styles/colorAndFontTheme';
 import Btn from '../common/Btn_short';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import Slider from '@react-native-community/slider';
 import {ParamListBase} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {removeDataInLocalStorage} from '../../store/AsyncService';
+import {
+  getDataInLocalStorage,
+  removeDataInLocalStorage,
+  saveDataInLocalStorage,
+} from '../../store/AsyncService';
+import {sound} from '../../App';
 
 interface Props {
   navigation: StackNavigationProp<ParamListBase, 'Option'>;
@@ -13,19 +18,59 @@ interface Props {
 
 const Option = ({navigation}: Props) => {
   const [isEnabled, setIsEnabled] = useState<boolean>(false);
+  const [backgroundVolume, setBackgroundVolume] = useState<number>(1);
+  const [effectVolume, setEffectVolume] = useState<number>(1);
 
   const toggleSwitch = () => {
     setIsEnabled(prev => !prev);
   };
 
-  const clickButton = () => {
+  const onClickCancelButton = () => {
+    navigation.navigate('Home');
+  };
+
+  const onClickApplyButton = () => {
+    setLocalVolume();
+    setLocalEfVolume();
     navigation.navigate('Home');
   };
 
   const logout = async () => {
     await removeDataInLocalStorage('id');
+    await removeDataInLocalStorage('token');
     navigation.navigate('Login');
   };
+
+  const initailSetting = async () => {
+    const bgmVolume = await getDataInLocalStorage('bgmVolume');
+    const efVolume = await getDataInLocalStorage('efVolume');
+
+    if (bgmVolume) {
+      setBackgroundVolume(bgmVolume);
+    }
+
+    if (efVolume) {
+      setEffectVolume(efVolume);
+    }
+  };
+
+  const setLocalVolume = async () => {
+    await saveDataInLocalStorage('bgmVolume', backgroundVolume);
+  };
+
+  const setLocalEfVolume = async () => {
+    await saveDataInLocalStorage('efVolume', effectVolume);
+  };
+
+  useEffect(() => {
+    initailSetting();
+  }, []);
+
+  useEffect(() => {
+    sound.setVolume(backgroundVolume);
+  }, [backgroundVolume]);
+
+  useEffect(() => {}, [effectVolume]);
 
   return (
     <View style={styles.body}>
@@ -46,6 +91,10 @@ const Option = ({navigation}: Props) => {
             style={styles.optionSlider}
             thumbTintColor={color.MAIN}
             minimumTrackTintColor={color.BROWN_47}
+            minimumValue={0}
+            maximumValue={1}
+            value={backgroundVolume}
+            onValueChange={setBackgroundVolume}
           />
         </View>
         <View style={styles.subSection5}>
@@ -54,6 +103,10 @@ const Option = ({navigation}: Props) => {
             style={styles.optionSlider}
             thumbTintColor={color.MAIN}
             minimumTrackTintColor={color.BROWN_47}
+            minimumValue={0}
+            maximumValue={1}
+            value={effectVolume}
+            onValueChange={setEffectVolume}
           />
         </View>
         <View style={styles.subSection6}>
@@ -69,8 +122,8 @@ const Option = ({navigation}: Props) => {
         <View style={styles.subSection7} />
       </View>
       <View style={styles.section3}>
-        <Btn txt={'적용하기'} clickEvent={clickButton} />
-        <Btn txt={'돌아가기'} clickEvent={clickButton} />
+        <Btn txt={'적용하기'} clickEvent={onClickApplyButton} />
+        <Btn txt={'돌아가기'} clickEvent={onClickCancelButton} />
         <Btn txt={'로그아웃'} clickEvent={logout} />
       </View>
       <View style={styles.section4} />

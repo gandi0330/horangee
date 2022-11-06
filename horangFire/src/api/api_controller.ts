@@ -2,17 +2,22 @@ import axios from 'axios';
 import urls from './urls';
 
 const api = {
-  user: {
-    login: async (formData: any) => {
+  auth: {
+    login: async (socialId: string) => {
       const response = await axios({
-        url: urls.user.login(),
+        url: urls.auth.login(),
         method: 'post',
         data: {
-          token: formData.data,
+          id: socialId,
+          role: 'User',
         },
       });
+
       return response;
     },
+  },
+
+  user: {
     getUserInfo: async (userId: string) => {
       const response = await axios({
         url: urls.user.getUserInfo(userId),
@@ -22,6 +27,7 @@ const api = {
       return response;
     },
   },
+
   diary: {
     submitMain: async (diary: any) => {
       console.log(diary);
@@ -34,6 +40,16 @@ const api = {
       });
       console.log(res);
       return res;
+    },
+  },
+
+  character: {
+    getNowUserCharacter: async (userId: string) => {
+      const response = await axios({
+        url: urls.character.getNowUserCharacter(userId),
+        method: 'get',
+      });
+      return response;
     },
   },
 };
