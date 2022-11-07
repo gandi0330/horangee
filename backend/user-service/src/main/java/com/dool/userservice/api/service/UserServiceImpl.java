@@ -1,7 +1,9 @@
 package com.dool.userservice.api.service;
 
+import antlr.Token;
 import com.dool.userservice.api.request.BuyBackgroundRequest;
 import com.dool.userservice.api.request.CreateUserRequest;
+import com.dool.userservice.api.request.TokenRequest;
 import com.dool.userservice.db.domain.Background;
 import com.dool.userservice.db.domain.User;
 import com.dool.userservice.db.domain.UserBackground;
@@ -49,6 +51,12 @@ public class UserServiceImpl implements UserService{
             userBackgroundService.createUserBackground(request);
             user.setPoint(user.getPoint() - background.getPrice());
         }
+    }
+
+    @Override
+    public void inputToken(TokenRequest request){
+        User user = userRepository.get(request.getId());
+        user.setRefreshToken(request.getToken());
     }
 
     @Override

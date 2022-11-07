@@ -2,6 +2,9 @@ package com.dool.userservice.api.controller;
 
 import com.dool.userservice.api.request.BuyBackgroundRequest;
 import com.dool.userservice.api.request.CreateUserRequest;
+import com.dool.userservice.api.request.LoginRequest;
+import com.dool.userservice.api.request.TokenRequest;
+import com.dool.userservice.api.response.ValidResponse;
 import com.dool.userservice.api.service.UserService;
 import com.dool.userservice.db.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,4 +63,24 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }
+
+    @PostMapping("/isUser")
+    ResponseEntity<ValidResponse> isUser(@RequestBody LoginRequest request){
+        ValidResponse result = new ValidResponse();
+        if(userService.getUser(request.getId()) == null){
+            result.setUser(false);
+        }else{
+            result.setUser(true);
+        }
+
+        return ResponseEntity.status(200).body(result);
+    }
+
+    @PostMapping("/token")
+    ResponseEntity inputToken(@RequestBody TokenRequest request){
+        userService.inputToken(request);
+
+        return ResponseEntity.status(200).body(null);
+    }
+
 }
