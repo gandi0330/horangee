@@ -19,7 +19,7 @@ public class ReportRepository {
     }
 
     public List<Report> getAll(){
-        return em.createQuery("select r from Report r")
+        return em.createQuery("select r from Report r order by r.id")
                 .getResultList();
     }
 
