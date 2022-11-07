@@ -13,6 +13,7 @@ import AnimalNameForm from '../screens/selectAnimal/AnimalNameForm';
 import AnimalNameConfirm from '../screens/selectAnimal/AnimalNameConfirm';
 import MissionIntro from '../screens/selectAnimal/MissionIntro';
 
+// mission page & modal
 import MissionHome from '../screens/mission/index';
 import MainMission from '../screens/mission/mainMission';
 import CommonMission from '../screens/mission/commonMission';
@@ -30,7 +31,6 @@ import CollectionDetail from '../screens/collection/CollectionDetail';
 import InfoOfAnimal from '../components/collection/InfoOfAnimal';
 import ListOfDiaries from '../components/collection/ListOfDiaries';
 import DiaryDetail from '../components/collection/DiaryDetail';
-import Points from '../components/points/Points';
 import MissionComplete from '../screens/selectAnimal/MissionComplete';
 
 // option Modal
@@ -51,14 +51,22 @@ const StackNavigation = () => {
       }}>
       {/* mission page */}
       <Stack.Group screenOptions={{presentation: 'card'}}>
-        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen
+          name="Home"
+          component={Home}
+          options={{gestureEnabled: false}}
+        />
         <Stack.Screen name="Start" component={Start} />
         <Stack.Screen name="Login" component={Login} />
 
         <Stack.Screen name="SelectAnimal" component={SelectAnimal} />
         <Stack.Screen name="AnimalNameForm" component={AnimalNameForm} />
         <Stack.Screen name="AnimalNameConfirm" component={AnimalNameConfirm} />
-        <Stack.Screen name="MissionIntro" component={MissionIntro} />
+        <Stack.Screen
+          name="MissionIntro"
+          component={MissionIntro}
+          options={{gestureEnabled: false}}
+        />
         <Stack.Screen name="MissionComplete" component={MissionComplete} />
 
         {/* mission page */}
@@ -92,7 +100,6 @@ const StackNavigation = () => {
         <Stack.Screen name="InfoOfAnimal" component={InfoOfAnimal} />
         <Stack.Screen name="ListOfDiaries" component={ListOfDiaries} />
         <Stack.Screen name="DiaryDetail" component={DiaryDetail} />
-        <Stack.Screen name="Points" component={Points} />
         <Stack.Screen name="CameraModal" component={CameraModal} />
       </Stack.Group>
     </Stack.Navigator>

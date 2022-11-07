@@ -1,8 +1,11 @@
 import {ParamListBase} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {StyleSheet, Text, View, SafeAreaView, Image} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {useEffect, useState} from 'react';
+import {StyleSheet, Text, View, SafeAreaView, FlatList} from 'react-native';
+import api from '../../api/api_controller';
 import {color, font} from '../../styles/colorAndFontTheme';
+import OnboardingItem from './Onboarding';
+
 const styles = StyleSheet.create({
   backgroundColor: {
     backgroundColor: color.BACK_SUB,
@@ -22,12 +25,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   section4: {
-    flex: 13,
+    flex: 20,
     justifyContent: 'center',
     alignItems: 'center',
   },
   section5: {
-    flex: 4,
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -67,80 +70,98 @@ interface Props {
 }
 
 interface ANIMAL {
-  id: string;
+  id: number;
   name: string;
+  species: string;
   image: string;
   backImage: string;
   mission: string;
 }
 const animal: ANIMAL[] = [
   {
-    id: '1',
+    id: 1,
     name: '벵갈호랑이',
+    species: 'tiger',
     image: require('../../assets/image/character/tiger.png'),
     backImage: require('../../assets/image/mainbottom.png'),
     mission: '종이 아끼기',
   },
   {
-    id: '2',
+    id: 2,
     name: '오목눈이',
+    species: 'bird',
     image: require('../../assets/image/character/tiger.png'),
     backImage: require('../../assets/image/mainbottom.png'),
     mission: '마스크 올바르게 버리기',
   },
   {
-    id: '3',
-    name: '아프리카 코끼리',
+    id: 3,
+    name: '아프리카코끼리',
+    species: 'elephant',
     image: require('../../assets/image/character/tiger.png'),
     backImage: require('../../assets/image/mainbottom.png'),
-    mission: '화석연료사용줄이기',
+    mission: '화석연료 사용 줄이기',
   },
   {
-    id: '4',
-    name: '바다 거북이',
+    id: 4,
+    name: '바다거북이',
+    species: 'turtle',
     image: require('../../assets/image/character/tiger.png'),
     backImage: require('../../assets/image/mainbottom.png'),
-    mission: '플라스틱줄이기',
+    mission: '플라스틱 줄이기',
   },
   {
-    id: '5',
+    id: 5,
     name: '펭귄',
+    species: 'penguin',
     image: require('../../assets/image/character/tiger.png'),
     backImage: require('../../assets/image/mainbottom.png'),
-    mission: '전기아끼기',
+    mission: '전기 아끼기',
   },
 ];
 
 const SelectAnimal = ({navigation}: Props) => {
+  const [characterList, setCharacterList] = useState<ANIMAL[]>([]);
+
+  const getCharacterList = async () => {
+    try {
+      const response = await api.character.getCharacterList();
+      setCharacterList(response.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // 동물리스트 조회
+  useEffect(() => {
+    getCharacterList();
+  }, []);
+
+  useEffect(() => {
+    console.log(characterList);
+  }, [characterList]);
+
   return (
     <SafeAreaView style={styles.backgroundColor}>
-      <View style={styles.section1}></View>
+      <View style={styles.section1} />
       <View style={styles.section2}>
         <Text style={styles.text1}>어떤동물과함께할까?</Text>
         <Text style={styles.text2}>21일동안 함께 할 동물을 골라봐!</Text>
       </View>
-      <View style={styles.section3}></View>
+      <View style={styles.section3} />
       <View style={styles.section4}>
-        <Text style={styles.text3}>동물이름</Text>
-        <Image
-          style={styles.charcterImage}
-          source={require('../../assets/image/character/tiger.png')}
+        <FlatList
+          data={animal}
+          renderItem={({item}) => (
+            <OnboardingItem item={item} navigation={navigation} />
+          )}
+          horizontal
+          showsHorizontalScrollIndicator
+          pagingEnabled
         />
       </View>
-      <View style={styles.section5}>
-        <Image
-          style={styles.missionBox}
-          source={require('../../assets/image/mainbottom.png')}
-        />
-        <View>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('AnimalNameForm')}>
-            <Text style={styles.text3}>MISSION</Text>
-            <Text style={styles.text3}>종이아끼기</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      <View style={styles.section6}></View>
+      <View style={styles.section5} />
+      <View style={styles.section6} />
     </SafeAreaView>
   );
 };

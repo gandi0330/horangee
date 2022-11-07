@@ -37,6 +37,10 @@ const urls = {
   character: {
     getNowUserCharacter: (userId: string) =>
       HOST + CHARACTER + USER_CHARACTER + USER_INFO + userId,
+    getCharacterList: () => HOST + CHARACTER + 'character',
+    create: () => HOST + CHARACTER + USER_CHARACTER,
+    getCharacterDialog: (id: number) =>
+      HOST + CHARACTER + 'character-dialog/' + `${id}`,
   },
 };
 
