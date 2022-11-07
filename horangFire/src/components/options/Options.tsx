@@ -54,12 +54,12 @@ const Option = ({navigation}: Props) => {
     const bgmVolume = await getDataInLocalStorage('bgmVolume');
     const efVolume = await getDataInLocalStorage('efVolume');
 
-    if (bgmVolume) {
+    if (typeof bgmVolume === 'number') {
       setBackgroundVolume(bgmVolume);
       setInitialVolume(bgmVolume);
     }
 
-    if (efVolume) {
+    if (typeof efVolume === 'number') {
       setEffectVolume(efVolume);
       setInitialEfVolume(efVolume);
     }

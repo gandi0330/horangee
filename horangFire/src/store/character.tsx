@@ -1,5 +1,14 @@
 import {createSlice} from '@reduxjs/toolkit';
 
+/**
+ * @param charType
+ * @id 캐릭터의 고유 아이디
+ * @user_id 유저의 고유 아이디
+ * @character_id 캐릭터의 고유 번호(ex: 1 호랑이)
+ * @nickname 캐릭터의 닉네임
+ * @characterLevel 캐릭터의 현재 레벨
+ * @status 미션을 3일차까지 모두 완료한 동물인가?
+ */
 export interface charType {
   id: number;
   user_id: string;
@@ -17,7 +26,7 @@ export const charSlice = createSlice({
   initialState: charInitialState,
   reducers: {
     setMyCharacter: (state: charType | null, action) => {
-      state = action.payload;
+      return action.payload.character;
     },
     setTodaysMission: (state: charType | null, action) => {
       if (state) {
@@ -28,9 +37,9 @@ export const charSlice = createSlice({
 });
 
 export const checkTodaysMission = (state: {character: {status: boolean}}) =>
-  state.character.status;
+  state.character?.status;
 export const selectName = (state: {character: {nickname: string}}) =>
-  state.character.nickname;
+  state.character?.nickname;
 export const selectCharacter = (state: {character: charType | null}) =>
   state.character;
 
