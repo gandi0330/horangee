@@ -35,6 +35,8 @@ const api = {
 
   character: {
     getNowUserCharacter: async (userId: string) => {
+      console.log('실행합니다.');
+      console.log(userId);
       const response = await axios({
         url: urls.character.getNowUserCharacter(userId),
         headers: {
@@ -47,6 +49,9 @@ const api = {
     getCharacterList: async () => {
       const response = await axios({
         url: urls.character.getCharacterList(),
+        headers: {
+          token: await getDataInLocalStorage('token'),
+        },
         method: 'get',
       });
       return response;
@@ -54,6 +59,9 @@ const api = {
     create: async (characterInfo: CharacterInfo) => {
       const response = await axios({
         url: urls.character.create(),
+        headers: {
+          token: await getDataInLocalStorage('token'),
+        },
         method: 'post',
         data: {
           ...characterInfo,
@@ -74,6 +82,9 @@ const api = {
       console.log(id);
       const response = await axios({
         url: urls.character.getCharacterDialog(id),
+        headers: {
+          token: await getDataInLocalStorage('token'),
+        },
         method: 'get',
       });
       return response;

@@ -16,6 +16,7 @@ import {ParamListBase} from '@react-navigation/native';
 import {scriptMain} from '../script/scriptMain';
 import {useSelector} from 'react-redux';
 import {selectBackgroundNumber} from '../store/background';
+import {selectCharacter} from '../store/character';
 
 const styles = StyleSheet.create({
   backgroundImage: {
@@ -141,7 +142,8 @@ interface Props {
 const Home = ({navigation}: Props) => {
   const [scriptNum, setScriptNum] = useState<number>(1);
   const backgroundNumber = useSelector(selectBackgroundNumber);
-
+  const character = useSelector(selectCharacter);
+  console.log(character);
   const handleScriptNum = () => {
     if (scriptNum < 6) {
       setScriptNum(prev => prev + 1);
@@ -150,7 +152,9 @@ const Home = ({navigation}: Props) => {
       setScriptNum(1);
     }
   };
+
   useEffect(() => {
+    console.log(character);
     const backAction = () => {
       Alert.alert('성냥팔이 호랭이', '앱을 종료하시겠습니까?', [
         {
