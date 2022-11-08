@@ -43,9 +43,8 @@ const Login = ({navigation}: Props) => {
     try {
       const profileResult = await getKakaoProfile();
       const response = await api.auth.login(profileResult.id);
-      const token = response.headers.token;
 
-      await saveDataInLocalStorage('id', profileResult.id);
+      const token = response.headers.token;
       await saveDataInLocalStorage('token', token);
 
       getUserData();
@@ -55,21 +54,12 @@ const Login = ({navigation}: Props) => {
   };
 
   const getUserData = async () => {
-    /**
-     * 로그인 돼있는지 확인하고 로그인 돼있으면
-     * 키우는 동물 있으면 홈으로, 없으면 동물선택
-     * 로그인 안 돼있으면 로그인 페이지 유지
-     */
+    const isLoggedIn = await getDataInLocalStorage('token');
 
-    // const isLoggedIn = await getDataInLocalStorage('token');
-
-    const profileId = await getDataInLocalStorage('id');
-    if (profileId) {
-      const response = await api.user.getUserInfo(profileId);
+    if (isLoggedIn) {
+      const response = await api.user.getUserInfo();
       dispatch(setUserObject({user: response.data}));
     }
-
-    // 프로필 id(토큰)이 없으면 그냥 로그인 페이지 유지
   };
 
   const getNowUserCharacter = async (id: string) => {
