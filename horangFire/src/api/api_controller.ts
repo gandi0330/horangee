@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {getDataInLocalStorage} from '../store/AsyncService';
 import {CharacterInfo, Report} from './apiDataType';
 import urls from './urls';
 
@@ -36,6 +37,9 @@ const api = {
     getNowUserCharacter: async (userId: string) => {
       const response = await axios({
         url: urls.character.getNowUserCharacter(userId),
+        headers: {
+          token: await getDataInLocalStorage('token'),
+        },
         method: 'get',
       });
       return response;
@@ -77,9 +81,12 @@ const api = {
   },
 
   user: {
-    getUserInfo: async (userId: string) => {
+    getUserInfo: async () => {
       const response = await axios({
-        url: urls.user.getUserInfo(userId),
+        url: urls.user.getUserInfo(),
+        headers: {
+          token: await getDataInLocalStorage('token'),
+        },
         method: 'get',
       });
 
