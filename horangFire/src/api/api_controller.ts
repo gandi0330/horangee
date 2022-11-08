@@ -36,9 +36,9 @@ const api = {
   character: {
     getNowUserCharacter: async (userId: string) => {
       console.log('실행합니다.');
-      console.log(userId);
+      // console.log(userId);
       const response = await axios({
-        url: urls.character.getNowUserCharacter(userId),
+        url: urls.character.getNowUserCharacter('2511201362'),
         headers: {
           token: await getDataInLocalStorage('token'),
         },

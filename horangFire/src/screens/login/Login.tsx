@@ -43,7 +43,6 @@ const Login = ({navigation}: Props) => {
     try {
       const profileResult = await getKakaoProfile();
       const response = await api.auth.login(profileResult.id);
-
       const token = response.headers.token;
       await saveDataInLocalStorage('token', token);
 
@@ -66,7 +65,7 @@ const Login = ({navigation}: Props) => {
     const response = await api.character.getNowUserCharacter(id);
 
     if (response.data.userCharacter) {
-      dispatch(setMyCharacter(response.data.userCharacter));
+      dispatch(setMyCharacter({character: response.data}));
       navigation.navigate('Home');
     } else {
       navigation.navigate('SelectAnimal');

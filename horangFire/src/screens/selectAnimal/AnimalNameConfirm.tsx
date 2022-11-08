@@ -57,14 +57,14 @@ const AnimalNameConfirm = ({navigation, route}: Props) => {
           const characterResponse = await api.character.getNowUserCharacter(
             user.id,
           );
+          console.log(characterResponse.data.userCharacter);
           if (characterResponse.data.userCharacter) {
-            dispatch(setMyCharacter(characterResponse.data.userCharacter));
+            dispatch(setMyCharacter({character: characterResponse.data}));
           } else {
             console.log('캐릭터를못가져온다!');
           }
         } catch (err) {
           console.error(err);
-          console.log('여기냐?');
         }
         navigation.navigate('MissionIntro', {
           animalName: response.data.nickname,

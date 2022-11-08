@@ -216,7 +216,7 @@ const Home = ({navigation}: Props) => {
           <View style={styles.section0BtnContainer}>
             <View style={styles.buttonTouchableNone} />
             <View>
-              <Text style={styles.characterText}>내호랭이최고</Text>
+              <Text style={styles.characterText}>dddd</Text>
             </View>
             <TouchableOpacity
               //한나언니 페이지 커뮤니티
