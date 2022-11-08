@@ -17,6 +17,7 @@ import {scriptMain} from '../script/scriptMain';
 import {useSelector} from 'react-redux';
 import {selectBackgroundNumber} from '../store/background';
 import {selectCharacter} from '../store/character';
+import api from '../api/api_controller';
 
 const styles = StyleSheet.create({
   backgroundImage: {
@@ -144,6 +145,9 @@ const Home = ({navigation}: Props) => {
   const backgroundNumber = useSelector(selectBackgroundNumber);
   const character = useSelector(selectCharacter);
   console.log(character);
+  const characterSpecied = character?.userCharacter?.character_id;
+  const characterLv = character?.userCharacter?.characterLevel;
+
   const handleScriptNum = () => {
     if (scriptNum < 6) {
       setScriptNum(prev => prev + 1);
@@ -175,7 +179,11 @@ const Home = ({navigation}: Props) => {
   }, []);
 
   const missionStatus = () => {
-    return false;
+    if (character?.userCharacter?.status) {
+      return true;
+    } else {
+      return false;
+    }
   };
 
   return (
@@ -200,7 +208,7 @@ const Home = ({navigation}: Props) => {
           <View style={styles.section0BtnContainer}>
             <View style={styles.buttonTouchableNone} />
             <View>
-              <Text style={styles.characterText}>n일차</Text>
+              <Text style={styles.characterText}>{character?.count} 일차</Text>
             </View>
             <TouchableOpacity
               onPress={() => navigation.navigate('BackgroundOption')}
@@ -216,7 +224,9 @@ const Home = ({navigation}: Props) => {
           <View style={styles.section0BtnContainer}>
             <View style={styles.buttonTouchableNone} />
             <View>
-              <Text style={styles.characterText}>dddd</Text>
+              <Text style={styles.characterText}>
+                {character?.userCharacter?.nickname}
+              </Text>
             </View>
             <TouchableOpacity
               //한나언니 페이지 커뮤니티

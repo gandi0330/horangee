@@ -38,7 +38,7 @@ const api = {
       console.log('실행합니다.');
       // console.log(userId);
       const response = await axios({
-        url: urls.character.getNowUserCharacter('2511201362'),
+        url: urls.character.getNowUserCharacter(userId),
         headers: {
           token: await getDataInLocalStorage('token'),
         },
