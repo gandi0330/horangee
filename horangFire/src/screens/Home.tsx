@@ -14,11 +14,15 @@ import {color, font} from '../styles/colorAndFontTheme';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {ParamListBase} from '@react-navigation/native';
 import {scriptMain} from '../script/scriptMain';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {selectBackgroundNumber} from '../store/background';
-import {selectCharacter} from '../store/character';
+import {selectCharacter, setMyCharacter} from '../store/character';
 import imagesPath from '../assets/image/constants/imagesPath';
 import {selectUser} from '../store/user';
+import {getDataInLocalStorage} from '../store/AsyncService';
+import api from '../api/api_controller';
+import {setBackgroundNumber} from '../store/background';
+import {selectHaveBackground, setHaveBackground} from '../store/haveBackground';
 
 const styles = StyleSheet.create({
   backgroundImage: {
@@ -206,6 +210,7 @@ interface Props {
 }
 
 const Home = ({navigation}: Props) => {
+  const dispatch = useDispatch();
   const [scriptNum, setScriptNum] = useState<number>(1);
   const backgroundNumber = useSelector(selectBackgroundNumber);
   const character = useSelector(selectCharacter);
@@ -224,7 +229,6 @@ const Home = ({navigation}: Props) => {
 
   useEffect(() => {
     const backAction = () => {
-      console.log('눌렀다!');
       Alert.alert('성냥팔이 호랭이', '앱을 종료하시겠습니까?', [
         {
           text: '취소',
@@ -254,7 +258,7 @@ const Home = ({navigation}: Props) => {
   const [specieName, setSpecieName] = useState<string>('tiger');
 
   const todayMissionStatus = () => {
-    if (character?.today) {
+    if (character?.todayMain) {
       return true;
     } else {
       return false;
@@ -340,6 +344,74 @@ const Home = ({navigation}: Props) => {
 
   const [showOption, setShowOption] = useState(false);
 
+  const [savedBgNumber, setSavedBgNumber] = useState<number>(1);
+  const [savedCheck, setSavedCheck] = useState<boolean>(false);
+  const haveBackground = useSelector(selectHaveBackground);
+  const [hadCheck, setHadCheck] = useState<boolean>(false);
+
+  const handleBackgroundOption = () => {
+    navigation.navigate('BackgroundOption');
+  };
+
+  useEffect(() => {
+    const getBackground = async () => {
+      const bgNumber = await getDataInLocalStorage('background_number');
+      setSavedCheck(true);
+
+      if (bgNumber) {
+        setSavedBgNumber(bgNumber);
+      }
+    };
+
+    const getUserBg = async () => {
+      try {
+        const response = await api.background.getUserBackground(nowUser.id);
+        setHadCheck(true);
+
+        const list: number[] = [];
+
+        for (const bg of response.data) {
+          list.push(bg.backgroundId);
+        }
+
+        dispatch(setHaveBackground(list));
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    getBackground();
+    getUserBg();
+  }, []);
+
+  useEffect(() => {
+    if (savedCheck && hadCheck) {
+      if (haveBackground.includes(savedBgNumber)) {
+        dispatch(setBackgroundNumber(savedBgNumber));
+      } else {
+        dispatch(setBackgroundNumber(character?.userCharacter?.character_id));
+      }
+    }
+  }, [savedBgNumber, haveBackground]);
+
+  const handleDiariesButton = () => {
+    navigation.navigate('ListOfDiaries', {
+      characterId: character?.userCharacter?.id,
+    });
+  };
+
+  useEffect(() => {
+    const getNowUserCharacter = async (id: string) => {
+      const response = await api.character.getNowUserCharacter(id);
+
+      if (response.data.userCharacter) {
+        dispatch(setMyCharacter({character: response.data}));
+      }
+    };
+
+    getNowUserCharacter(nowUser.id);
+  }, []);
+
   return (
     <ImageBackground
       source={BACKGROUND[backgroundNumber]}
@@ -385,11 +457,11 @@ const Home = ({navigation}: Props) => {
               </TouchableOpacity>
             </View>
             <TouchableOpacity
-              onPress={() => navigation.navigate('BackgroundOption')}
+              onPress={handleBackgroundOption}
               style={styles.buttonTouchable}>
               <Image
-                style={styles.buttonsBackground}
-                source={require('../assets/image/icon/background.png')}
+                style={styles.buttons}
+                source={require('../assets/image/icon/changeBackground.png')}
               />
             </TouchableOpacity>
           </View>
@@ -406,8 +478,8 @@ const Home = ({navigation}: Props) => {
               onPress={() => navigation.navigate('Community')}
               style={styles.buttonTouchable}>
               <Image
-                style={styles.buttonsCommu}
-                source={require('../assets/image/icon/commut.png')}
+                style={styles.buttons}
+                source={require('../assets/image/icon/commu.png')}
               />
             </TouchableOpacity>
           </View>
@@ -469,20 +541,25 @@ const Home = ({navigation}: Props) => {
               onPress={() => navigation.navigate('Collection')}
               style={styles.buttonTouchable}>
               <Image
-                style={styles.buttonsCollection}
-                source={require('../assets/image/icon/book.png')}
+                style={styles.buttons}
+                source={require('../assets/image/icon/history.png')}
               />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('ListOfDiaries', {
-                  characterId: character?.userCharacter?.id,
-                })
-              }
+              // diary icon
+              onPress={handleDiariesButton}
               style={styles.buttonTouchable}>
               <Image
-                style={styles.buttonsDiary}
+                style={styles.buttons}
                 source={require('../assets/image/icon/diary.png')}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('VideoModal')}
+              style={styles.buttonTouchable}>
+              <Image
+                style={styles.buttons}
+                source={require('../assets/image/icon/video.png')}
               />
             </TouchableOpacity>
           </View>
