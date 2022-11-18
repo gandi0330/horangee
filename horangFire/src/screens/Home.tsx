@@ -349,19 +349,6 @@ const Home = ({navigation}: Props) => {
           <View style={styles.section0BtnContainer}>
             <View style={styles.buttonTouchableNone} />
             <TouchableOpacity
-              onPress={() => navigation.navigate('VideoLink')}
-              style={styles.buttonTouchable}>
-              <Image
-                style={styles.buttons}
-                source={require('../assets/image/setting.png')}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View style={styles.section0}>
-          <View style={styles.section0BtnContainer}>
-            <View style={styles.buttonTouchableNone} />
-            <TouchableOpacity
               onPress={() => navigation.navigate('Option')}
               style={styles.buttonTouchable}>
               <Image
@@ -433,7 +420,7 @@ const Home = ({navigation}: Props) => {
             />
             <TouchableOpacity onPress={handleScriptNum}>
               <Text style={styles.missionText}>
-                {/* {scriptMain[specieName][`${scriptNum}`]} */}
+                {scriptMain[specieName][`${scriptNum}`]}
               </Text>
             </TouchableOpacity>
           </View>
